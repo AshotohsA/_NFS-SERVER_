@@ -1,0 +1,2 @@
+# Разрешаем чтение/запись, синхронную запись и маппинг root в анонимного пользователя
+/srv/nfs/share *(rw,sync,no_subtree_check,root_squash,sec=sys)
