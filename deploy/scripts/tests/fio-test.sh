@@ -2,15 +2,14 @@
 # @file fio-test.sh
 # @brief Нагрузочное тестирование NFS-шары с использованием утилиты fio.
 # @details Замеряет скорость случайной записи и чтения блоками по 4K.
-# @author [Твои ФИО] (твоя_почта@university.com)
+# @author
 # @date 2026-06-06
 # @version 1.0.0
 # @license MIT
 
-# Режим безопасного выполнения (требование методички)
 set -eu
 
-echo "=== Запуск нагрузочного теста NFS (fio) ==="
+echo "Запуск нагрузочного теста NFS (fio)"
 echo "Устанавливаем fio..."
 apk add fio --no-cache
 
@@ -24,4 +23,4 @@ fio --name=nfs_write_test \
     --direct=1 \
     --group_reporting
 
-echo "=== Тест завершен успешно ==="
+echo "Тест завершен успешно"

@@ -1,0 +1,13 @@
+# @file prometheus.yml
+# @brief Конфигурация Prometheus для сбора метрик с Node Exporter и NFS.
+# @details Опрос происходит каждые 15 секунд.
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'node_exporter'
+    static_configs:
+      # Имя 'node-exporter' берется из имени сервиса в docker-compose.yml
+      - targets: ['node-exporter:9100']
