@@ -1,0 +1,44 @@
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Secrets
+*.pem
+*.key
+*.pub
+certs/
+
+# Logs
+*.log
+logs/
+*.pid
+*.sock
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Archives
+*.zip
+*.tar.gz
+
+# Python
+__pycache__/
+*.pyc
+
+# Node modules
+node_modules/
+
+# Docker volumes
+*.db
+*.sqlite
