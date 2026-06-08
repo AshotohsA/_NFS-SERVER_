@@ -7,7 +7,7 @@ services:
       - nfs_data:/srv/nfs/share
       - ./docker/nfs-server/exports:/etc/exports:ro
     ports:
-      - "2049:2049"
+      - "2249:2049"
     networks:
       - nfs-net
     healthcheck:
@@ -71,6 +71,20 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+
+  wud:
+    image: getwud/wud:8.2.2
+    container_name: wud
+    ports:
+      - "3001:3000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WUD_TRIGGER_DOCKER_LOCAL=true
+      - WUD_TRIGGER_DOCKER_LOCAL_MODE=simple
+    networks:
+      - nfs-net
+    restart: unless-stopped
 
 volumes:
   nfs_data:
