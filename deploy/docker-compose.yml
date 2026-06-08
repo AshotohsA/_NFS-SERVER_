@@ -16,15 +16,11 @@ services:
       timeout: 5s
       retries: 3
 
-  # ДОБАВЛЕНО: Сервис вашей административной панели управления
   custom-service:
     build: ./docker/custom-service
     container_name: custom-service
-    # Включаем привилегированный режим, чтобы nsenter и iptables имели доступ к хосту
     privileged: true
-    # Даем контейнеру видеть процессы хоста (нужно для nsenter -t 1)
     pid: "host"
-    # Разрешаем управлять сетевыми правилами фаервола хоста
     cap_add:
       - NET_ADMIN
     ports:
@@ -32,7 +28,6 @@ services:
     networks:
       - nfs-net
     restart: always
-    # Ждем, пока запустится основной NFS сервер перед стартом панели
     depends_on:
       nfs-server:
         condition: service_healthy
