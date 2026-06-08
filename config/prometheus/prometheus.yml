@@ -1,3 +1,5 @@
+# Author: Student 3 (Krolivets) - Observability & Security
+# Configured Prometheus scrape for node-exporter
 # @file prometheus.yml
 # @brief Конфигурация Prometheus для сбора метрик с Node Exporter и NFS.
 # @details Опрос происходит каждые 15 секунд.
