@@ -1,29 +1,18 @@
 # @file Dockerfile
-# @brief Сборка минимального и безопасного образа NFS-сервера.
-# @details Используется Alpine Linux, принцип наименьших привилегий (non-root).
-# @author 
-# @date 2026-06-06
-# @version 1.0.0
-# @license MIT
+# @brief Сборка User-Space NFS-сервера (unfs3) для WSL2.
 
 FROM alpine:3.19
 
-RUN apk add --no-cache nfs-utils sudo
+RUN apk add --no-cache unfs3 rpcbind
 
-RUN addgroup -S nfsgrp && adduser -S nfsusr -G nfsgrp
-
-RUN echo "nfsusr ALL=(root) NOPASSWD: /usr/sbin/rpc.nfsd, /usr/sbin/exportfs" > /etc/sudoers.d/nfsusr \
-    && chmod 0440 /etc/sudoers.d/nfsusr
-
-RUN mkdir -p /srv/nfs/share && chown -R nfsusr:nfsgrp /srv/nfs/share
+RUN mkdir -p /srv/nfs/share && chmod 777 /srv/nfs/share
 
 COPY exports /etc/exports
-COPY entrypoint.sh /entrypoint.sh
+RUN chmod 644 /etc/exports
 
-RUN chmod +x /entrypoint.sh && chown nfsusr:nfsgrp /entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 EXPOSE 2049
 
-USER nfsusr
-
-ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/entrypoint.sh"]

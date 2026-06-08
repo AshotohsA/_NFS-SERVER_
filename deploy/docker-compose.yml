@@ -3,7 +3,11 @@ services:
     build: ./docker/nfs-server
     container_name: nfs-server
     hostname: nfs-server
-    privileged: true
+    volumes:
+      - nfs_data:/srv/nfs/share
+      - ./docker/nfs-server/exports:/etc/exports:ro
+    ports:
+      - "2049:2049"
     networks:
       - nfs-net
     healthcheck:
@@ -12,39 +16,15 @@ services:
       timeout: 5s
       retries: 3
 
-  client-1:
-    image: alpine:3.19
-    container_name: client-1
-    command: tail -f /dev/null
-    volumes:
-      - nfs_shared_volume:/mnt/nfs
-    networks:
-      - nfs-net
-    depends_on:
-      nfs-server:
-        condition: service_healthy
-
-  client-2:
-    image: alpine:3.19
-    container_name: client-2
-    command: tail -f /dev/null
-    volumes:
-      - nfs_shared_volume:/mnt/nfs
-    networks:
-      - nfs-net
-    depends_on:
-      nfs-server:
-        condition: service_healthy
-
   node-exporter:
     image: prom/node-exporter:v1.7.0
     container_name: node-exporter
     command:
-      - '--path.rootfs=/host'
-      - '--collector.nfsd'
-    pid: host
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
     volumes:
-      - /:/host:ro,rslave
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
     networks:
       - nfs-net
     healthcheck:
@@ -56,6 +36,8 @@ services:
   prometheus:
     image: prom/prometheus:v2.51.0
     container_name: prometheus
+    ports:
+      - "9090:9090"
     volumes:
       - ../config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
@@ -91,12 +73,7 @@ services:
       retries: 3
 
 volumes:
-  nfs_shared_volume:
-    driver: local
-    driver_opts:
-      type: nfs
-      o: addr=nfs-server,vers=4,rw,nolock,tcp
-      device: ":/srv/nfs/share"
+  nfs_data:
   prometheus_data:
 
 networks:
