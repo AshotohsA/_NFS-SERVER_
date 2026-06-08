@@ -1,0 +1,39 @@
+# Секреты и переменные окружения
+.env
+.env.local
+.env.production
+*.pem
+*.key
+*.pub
+certs/
+
+# Логи и временные файлы
+*.log
+logs/
+*.pid
+*.sock
+
+# Файлы сред разработки
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Кэш Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# LaTeX артефакты
+*.aux
+*.fdb_latexmk
+*.fls
+*.toc
+*.blg
+*.bbl
+*.out
+
+# Архивы
+*.zip
+*.tar.gz
