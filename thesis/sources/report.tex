@@ -1,0 +1,641 @@
+\documentclass[14pt,a4paper]{extarticle}
+
+% ─── Кодировка и язык ────────────────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[russian]{babel}
+
+% ─── Математические символы (для \checkmark) ─────────────────────────────────
+\usepackage{amssymb}
+
+% ─── Поля страницы ───────────────────────────────────────────────────────────
+\usepackage[left=30mm,right=15mm,top=20mm,bottom=20mm]{geometry}
+
+% ─── Межстрочный интервал ────────────────────────────────────────────────────
+\usepackage{setspace}
+\onehalfspacing
+
+% ─── Отступ первого абзаца ───────────────────────────────────────────────────
+\usepackage{indentfirst}
+\setlength{\parindent}{1.25cm}
+
+% ─── Таблицы ─────────────────────────────────────────────────────────────────
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{tabularx}
+
+% ─── Листинги кода ───────────────────────────────────────────────────────────
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codebg}{HTML}{F5F5F5}
+\definecolor{codeframe}{HTML}{CCCCCC}
+\definecolor{codecomment}{HTML}{5C8A5C}
+\definecolor{codestring}{HTML}{A31515}
+\definecolor{codekeyword}{HTML}{0000CC}
+
+% Определение синтаксиса YAML для пакета listings
+\lstdefinelanguage{yaml}{
+	keywords={services, image, container_name, restart, privileged, environment, volumes, networks, ipv4_address, depends_on, condition, driver, driver_opts, type, o, device, healthcheck, test, interval, timeout, retries, start_period},
+	keywordstyle=\color{codekeyword}\bfseries,
+	sensitive=false,
+	comment=[l]{\#},
+	commentstyle=\color{codecomment},
+	stringstyle=\color{codestring},
+	morestring=[b]',
+	morestring=[b]"
+}
+
+\lstset{
+	backgroundcolor=\color{codebg},
+	basicstyle=\ttfamily\small,
+	breakatwhitespace=false,
+	breaklines=true,
+	captionpos=b,
+	commentstyle=\color{codecomment},
+	frame=single,
+	rulecolor=\color{codeframe},
+	keepspaces=true,
+	keywordstyle=\color{codekeyword}\bfseries,
+	numbers=left,
+	numbersep=8pt,
+	numberstyle=\tiny\color{gray},
+	showspaces=false,
+	showstringspaces=false,
+	showtabs=false,
+	stringstyle=\color{codestring},
+	tabsize=2,
+	extendedchars=true,
+	inputencoding=utf8,
+	literate=
+	{а}{{\cyrа}}1 {б}{{\cyrb}}1 {в}{{\cyrv}}1 {г}{{\cyrg}}1 {д}{{\cyrd}}1
+	{е}{{\cyre}}1 {ё}{{\cyryo}}1 {ж}{{\cyrzh}}1 {з}{{\cyrz}}1 {и}{{\cyri}}1
+	{й}{{\cyrishrt}}1 {к}{{\cyrk}}1 {л}{{\cyrl}}1 {м}{{\cyrm}}1 {н}{{\cyrn}}1
+	{о}{{\cyro}}1 {п}{{\cyrp}}1 {р}{{\cyrr}}1 {с}{{\cyrs}}1 {т}{{\cyrt}}1
+	{у}{{\cyru}}1 {ф}{{\cyrf}}1 {х}{{\cyrh}}1 {ц}{{\cyrc}}1 {ч}{{\cyrch}}1
+	{ш}{{\cyrsh}}1 {щ}{{\cyrshch}}1 {ъ}{{\cyrhrdsn}}1 {ы}{{\cyrery}}1
+	{ь}{{\cyrsftsn}}1 {э}{{\cyrerev}}1 {ю}{{\cyryu}}1 {я}{{\cyrya}}1
+	{А}{{\CYRA}}1 {Б}{{\CYRB}}1 {В}{{\CYRV}}1 {Г}{{\CYRG}}1 {Д}{{\CYRD}}1
+	{Е}{{\CYRE}}1 {Ё}{{\CYRYO}}1 {Ж}{{\CYRZH}}1 {З}{{\CYRZ}}1 {И}{{\CYRI}}1
+	{Й}{{\CYRISHRT}}1 {К}{{\CYRK}}1 {Л}{{\CYRL}}1 {М}{{\CYRM}}1 {Н}{{\CYRN}}1
+	{О}{{\CYRO}}1 {П}{{\CYRP}}1 {Р}{{\CYRR}}1 {С}{{\CYRS}}1 {Т}{{\CYRT}}1
+	{У}{{\CYRU}}1 {Ф}{{\CYRF}}1 {Х}{{\CYRH}}1 {Ц}{{\CYRC}}1 {Ч}{{\CYRCH}}1
+	{Ш}{{\CYRSH}}1 {Щ}{{\CYRSHCH}}1 {Ъ}{{\CYRHRDSN}}1 {Ы}{{\CYRERY}}1
+	{Ь}{{\CYRSFTSN}}1 {Э}{{\CYREREV}}1 {Ю}{{\CYRYU}}1 {Я}{{\CYRYA}}1
+}
+
+% ─── Гиперссылки ─────────────────────────────────────────────────────────────
+\usepackage[hidelinks]{hyperref}
+
+% ─── Колонтитулы ─────────────────────────────────────────────────────────────
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\small Курсовой проект | Администрирование ОС Linux | ЮФУ 2026}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ─── Заголовки секций ────────────────────────────────────────────────────────
+\usepackage{titlesec}
+\titleformat{\section}{\large\bfseries}{}{0em}{\thesection\quad}
+\titleformat{\subsection}{\normalsize\bfseries}{}{0em}{\thesubsection\quad}
+
+% ─── Переопределение счётчика страниц для титульника ─────────────────────────
+\usepackage{etoolbox}
+
+\begin{document}
+	
+	% ════════════════════════════════════════════════════════════════════════════════
+	%  ТИТУЛЬНАЯ СТРАНИЦА
+	% ════════════════════════════════════════════════════════════════════════════════
+	\thispagestyle{empty}
+	\begin{center}
+		{\normalsize
+			Министерство науки и высшего образования Российской Федерации\\[4pt]
+			Южный федеральный университет\\[4pt]
+			Физический факультет\\[40pt]
+		}
+		
+		{\Large\bfseries КУРСОВОЙ ПРОЕКТ}\\[10pt]
+		{\normalsize по дисциплине «Администрирование ОС Linux»}\\[30pt]
+		
+		{\large\bfseries Тема: Использование NFS-сервера для сетевого хранения данных}\\[50pt]
+		
+		\begin{flushleft}
+			\hspace{6cm}
+			\begin{minipage}{0.5\textwidth}
+				\textbf{Авторы (Группа):}\\[4pt]
+				Григорян А.\,А.\\
+				Карлашов А.\,В.\\
+				Кроливец И.\,С.\\[20pt]
+				\textbf{Проверил:}\\[4pt]
+				Тимошенко Павел Евгеньевич
+			\end{minipage}
+		\end{flushleft}
+		
+		\vfill
+		{\normalsize Ростов-на-Дону, 2026}
+	\end{center}
+	
+	\newpage
+	
+	% ════════════════════════════════════════════════════════════════════════════════
+	%  СОДЕРЖАНИЕ
+	% ════════════════════════════════════════════════════════════════════════════════
+	\thispagestyle{fancy}
+	\tableofcontents
+	
+	\newpage
+	
+	% ════════════════════════════════════════════════════════════════════════════════
+	%  ВВЕДЕНИЕ
+	% ════════════════════════════════════════════════════════════════════════════════
+	\section*{Введение}
+	\addcontentsline{toc}{section}{Введение}
+	
+	Современный этап развития корпоративной ИТ-инфраструктуры предъявляет всё более
+	высокие требования к централизованному хранению и совместному использованию
+	файловых ресурсов. В средах с большим числом узлов --- будь то физические серверы,
+	виртуальные машины или контейнеми --- каждый узел не должен хранить собственную копию
+	данных; необходима единая точка хранения, доступная всем участникам инфраструктуры
+	одновременно.
+	
+	Протокол NFS (Network File System), разработанный компанией Sun Microsystems в
+	1984 году и прошедший эволюцию вплоть до версии NFSv4.2, остаётся отраслевым
+	стандартом сетевых файловых систем для Unix-подобных сред. Его нативная интеграция с
+	ядром Linux, высокая производительность при работе с большим числом файлов и богатые
+	возможности разграничения прав доступа делают NFS оптимальным выбором для задач
+	горизонтального масштабирования хранилищ и организации совместной работы контейнеров
+	с общими данными.
+	
+	Однако ручная настройка NFS-сервера неизбежно порождает «дрейф конфигураций»
+	(configuration drift) и ошибки воспроизводимости. Применение методологии
+	Infrastructure as Code (IaC) совместно с инструментами контейнеризации Docker
+	позволяет полностью автоматизировать жизненный цикл развёртывания, устранив
+	человеческий фактор.
+	
+	\textbf{Цель данного проекта} --- комплексное проектирование, развёртывание, настройка
+	и защита NFS-сервера в контейнеризированной среде под управлением ОС Linux, а также
+	обеспечение безопасного сетевого доступа к нему для множества клиентских контейнеров.
+	
+	\newpage
+	
+	% ════════════════════════════════════════════════════════════════════════════════
+	%  1. РАСПРЕДЕЛЕНИЕ РОЛЕЙ
+	% ════════════════════════════════════════════════════════════════════════════════
+	\section{Распределение ролей в группе и индивидуальный вклад}
+	
+	Разработка, тестирование и обеспечение безопасности сетевого файлового хранилища
+	выполнялись проектной группой из трёх человек с чётким разграничением обязанностей и
+	зон инженерной ответственности.
+	
+	\begin{table}[h!]
+		\centering
+		\small
+		\begin{tabularx}{\textwidth}{|l|l|X|}
+			\hline
+			\textbf{Участник} & \textbf{Роль} & \textbf{Основные задачи} \\
+			\hline
+			Григорян Ашот & Инженер по автоматизации & Docker Compose, bootstrap.sh, Dockerfile, Makefile \\
+			\hline
+			Карлашов Андрей & Системный администратор / SRE & Настройка NFS, монтирование, healthcheck, HA-тесты \\
+			\hline
+			Кроливец Иван & Инженер по безопасности & Hardening, UFW, Prometheus, Grafana, CI/CD-пайплайн \\
+			\hline
+		\end{tabularx}
+		\caption{Распределение ролей в проектной группе}
+	\end{table}
+	
+	\subsection{Инженер по автоматизации инфраструктуры --- Григорян Ашот}
+	
+	В зону ответственности инженера по автоматизации входила разработка декларативного
+	описания всей инфраструктуры и автоматизация её жизненного цикла:
+	
+	\begin{itemize}
+		\item Проектирование структуры Git-репозитория и настройка ветвления
+		(\texttt{main}, \texttt{feature/*}, \texttt{gh-pages});
+		\item Разработка главного оркестрационного манифеста \texttt{docker-compose.yml}
+		с описанием NFS-сервера, клиентских контейнеров и изолированных виртуальных сетей;
+		\item Написание скрипта \texttt{bootstrap.sh} первичной подготовки ОС: установка
+		зависимостей, создание директорий экспорта, настройка прав доступа;
+		\item Сборка оптимизированных Dockerfile с применением принципа наименьших
+		привилегий (non-root user) и многоэтапной сборки (multi-stage builds);
+		\item Автоматизация управления стендом через Makefile: цели
+		\texttt{up}, \texttt{down}, \texttt{test}, \texttt{clean}.
+	\end{itemize}
+	
+	\subsection{Системный администратор / SRE --- Карлашов Андрей}
+	
+	Системный администратор сфокусировался на конфигурации сервисного уровня и
+	обеспечении отказоустойчивости:
+	
+	\begin{itemize}
+		\item Настройка NFS-сервера (\texttt{nfs-kernel-server} / NFS Ganesha): конфигурация
+		файла \texttt{/etc/exports}, опций \texttt{rw}, \texttt{sync},
+		\texttt{root\_squash}, \texttt{fsid};
+		\item Конфигурация нескольких клиентских контейнеров с автоматическим монтированием
+		NFS-шары через Docker Volume (\texttt{driver: local, type: nfs});
+		\item Написание и интеграция скриптов healthcheck для проверки доступности
+		NFS-экспорта;
+		\item Проведение HA-тестов: имитация падения сервера, замер времени восстановления
+		доступа к данным клиентами;
+		\item Проверка блокировок файлов при одновременной записи из нескольких контейнеров.
+	\end{itemize}
+	
+	\subsection{Инженер по мониторингу и безопасности --- Кроливец Иван}
+	
+	Инженер по безопасности обеспечивал многоуровневую защиту хранилища и наблюдаемость
+	системы:
+	
+	\begin{itemize}
+		\item Разработка скрипта \texttt{hardening.sh}: конфигурация UFW по принципу
+		«запрещено всё, кроме явно разрешённого»; открыты только порты SSH (22),
+		NFS (2049) для доверенных подсетей;
+		\item Изоляция сети: NFS-трафик строго ограничен виртуальной сетью
+		\texttt{storage-net}, внешний доступ к порту 2049 заблокирован;
+		\item Развёртывание стека мониторинга Prometheus + Grafana с экспортером
+		\texttt{node\_exporter} и cAdvisor для сбора метрик контейнеров;
+		\item Разработка дашбордов Grafana: нагрузка на NFS-шару, I/O дисковой подсистемы,
+		состояние контейнеров;
+		\item Настройка конвейера CI/CD в GitHub Actions: линтеры ShellCheck, yamllint,
+		Hadolint; блокировка слияния при провале тестов.
+	\end{itemize}
+	
+	\newpage
+	
+	% ════════════════════════════════════════════════════════════════════════════════
+	%  2. ТЕОРЕТИЧЕСКИЕ ОСНОВЫ
+	% ════════════════════════════════════════════════════════════════════════════════
+	\section{Теоретические основы технологии NFS}
+	
+	NFS (Network File System) --- клиент-серверный протокол, позволяющий монтировать
+	удалённые файловые системы как локальные. В ядре Linux реализована поддержка NFSv3 и
+	NFSv4/4.1/4.2. Архитектура NFS строится на модели RPC (Remote Procedure Call) с
+	транспортом по протоколам TCP и UDP.
+	
+	Версия NFSv4 принципиально отличается от предшественников: она использует единственный
+	порт 2049/TCP, обеспечивает интегрированную безопасность через Kerberos или
+	RPCSEC\_GSS, поддерживает сессионную модель с управлением состоянием соединения и
+	атомарные операции аренды (lease). NFSv4.1 добавляет параллельное расположение данных
+	(pNFS), а NFSv4.2 --- серверную копию файлов без участия клиента (server-side copy).
+	
+	\textbf{Ключевые параметры экспорта NFS}, задаваемые в файле \texttt{/etc/exports}:
+	
+	\begin{itemize}
+		\item \texttt{rw / ro} --- разрешение записи или только чтения для клиента;
+		\item \texttt{sync} --- гарантия записи данных на диск до подтверждения клиенту
+		(важно для целостности данных);
+		\item \texttt{async} --- более высокая производительность, но риск потери данных при
+		сбое;
+		\item \texttt{root\_squash} --- перемаппинг root-пользователя клиента в анонимный
+		UID/GID (безопасность);
+		\item \texttt{no\_root\_squash} --- отключение маппинга (используется только в
+		доверенных средах);
+		\item \texttt{fsid=0} --- обязателен для NFSv4, определяет корень псевдофайловой
+		системы экспорта.
+	\end{itemize}
+	
+	\textbf{Сравнение NFS с альтернативными решениями.}
+	При выборе технологии хранения была проведена сравнительная оценка трёх подходов:
+	
+	\begin{table}[h!]
+		\centering
+		\small
+		\begin{tabularx}{\textwidth}{|l|X|X|l|}
+			\hline
+			\textbf{Технология} & \textbf{Преимущества} & \textbf{Недостатки} & \textbf{Вывод} \\
+			\hline
+			NFS &
+			Нативная поддержка в Linux, скорость, простая интеграция с Docker &
+			Ограниченная отказоустойчивость, слабая защита без Kerberos &
+			Оптимален \\
+			\hline
+			Samba (SMB) &
+			Кросс-платформенность, интеграция с AD/LDAP &
+			Выше накладные расходы в Linux, сложнее интеграция с Docker &
+			Избыточен \\
+			\hline
+			GlusterFS &
+			Распределённая архитектура, репликация, масштабирование &
+			Высокая сложность настройки, требует от 3 узлов кластера &
+			Избыточен \\
+			\hline
+		\end{tabularx}
+		\caption{Сравнение технологий сетевого файлового хранилища}
+	\end{table}
+	
+	\newpage
+	
+	% ════════════════════════════════════════════════════════════════════════════════
+	%  3. ПРОЕКТИРОВАНИЕ АРХИТЕКТУРЫ
+	% ════════════════════════════════════════════════════════════════════════════════
+	\section{Проектирование архитектуры и сетевая изоляция}
+	
+	Архитектура стенда построена по принципу минимальной связности компонентов. Все
+	сервисы развёрнуты в Docker-контейнерах и взаимодействуют исключительно через
+	изолированные виртуальные сети.
+	
+	\textbf{Состав кластера:}
+	
+	\begin{description}
+		\item[\texttt{nfs-server}] Основной сервис хранения данных. Экспортирует директорию
+		\texttt{/exports/shared} по протоколу NFSv4 на порту 2049. Примонтированный
+		именованный том \texttt{nfs\_data} обеспечивает персистентность данных.
+		
+		\item[\texttt{nfs-client-1}] Первый клиент. Автоматически монтирует NFS-шару через
+		Docker Volume (\texttt{driver: local, type: nfs4}) при старте контейнера.
+		Имитирует сервис приложения.
+		
+		\item[\texttt{nfs-client-2}] Второй клиент. Монтирует ту же NFS-шару, демонстрируя
+		совместный доступ к данным из нескольких контейнеров одновременно.
+		
+		\item[\texttt{monitoring}] Контейнер Prometheus + Grafana для сбора метрик нагрузки
+		на NFS-сервер и дисковой подсистемы.
+	\end{description}
+	
+	\textbf{Сетевая topology.}
+	Безопасность сетевого контура реализована через виртуализацию Docker.
+	Созданы две изолированные сети:
+	
+	\begin{itemize}
+		\item \texttt{storage-net} (bridge) --- приватная сеть для NFS-трафика. NFS-сервер и
+		оба клиента подключены исключительно к этой сети. Внешний доступ к порту 2049
+		отсутствует.
+		\item \texttt{monitoring-net} (bridge) --- отдельная сеть для Prometheus/Grafana.
+		Дашборды Grafana доступны на порту 3000 хост-машины с базовой
+		HTTP-аутентификацией.
+	\end{itemize}
+	
+	Сетевое разграничение гарантирует, что NFS-трафик (в том числе данные файлов) не
+	может быть перехвачен другими контейнерами и не покидает виртуальный сегмент
+	\texttt{storage-net}.
+	
+	\newpage
+	
+	% ════════════════════════════════════════════════════════════════════════════════
+	%  4. АВТОМАТИЗАЦИЯ
+	% ════════════════════════════════════════════════════════════════════════════════
+	\section{Автоматизация развёртывания и концепция IaC}
+	
+	Развёртывание инфраструктуры реализовано в рамках парадигмы IaC с помощью
+	декларативного инструмента Docker Compose. Это полностью исключает дрейф конфигураций
+	и гарантирует идентичность сред разработки, тестирования и промышленной эксплуатации.
+	
+	\subsection{Декларативное описание стека}
+	
+	Ниже приведён фрагмент конфигурационного файла \texttt{docker-compose.yml},
+	описывающий NFS-сервер и одного из клиентов:
+	
+	\begin{lstlisting}[language=yaml, caption={Фрагмент docker-compose.yml}]
+		services:
+		nfs-server:
+		image: erichough/nfs-server:latest
+		container_name: nfs-server
+		restart: always
+		privileged: true
+		environment:
+		NFS_EXPORT_0: '/exports/shared *(rw,sync,no_subtree_check,fsid=0)'
+		volumes:
+		- nfs_data:/exports/shared
+		networks:
+		storage-net:
+		ipv4_address: 172.20.0.10
+		
+		nfs-client-1:
+		image: alpine:3.19
+		container_name: nfs-client-1
+		restart: always
+		depends_on:
+		nfs-server:
+		condition: service_healthy
+		volumes:
+		- type: volume
+		source: nfs_shared
+		target: /mnt/shared
+		networks:
+		- storage-net
+	\end{lstlisting}
+	
+	\subsection{Автоматизация жизненного цикла окружения}
+	
+	Ниже приведена реализация скрипта первичной инициализации хост-системы:
+	
+	\begin{lstlisting}[language=bash, caption={Скрипт bootstrap.sh}]
+		#!/bin/bash
+		# Host initialization script
+		set -euo pipefail
+		
+		EXPORT_DIR="${EXPORT_DIR:-/opt/nfs/shared}"
+		BACKUP_DIR="${BACKUP_DIR:-/opt/nfs/backups}"
+		
+		# Export directories setup
+		for dir in "${EXPORT_DIR}" "${BACKUP_DIR}"; do
+		if [[ ! -d "${dir}" ]]; then
+		mkdir -p "${dir}"
+		chown nobody:nogroup "${dir}"
+		chmod 777 "${dir}"
+		echo "LOG: Created directory ${dir}"
+		fi
+		done
+		
+		# Environment template verification
+		if [[ ! -f ".env" ]]; then
+		cp .env.example .env
+		echo "WARN: .env configuration initialized!"
+		fi
+	\end{lstlisting}
+	
+	\newpage
+	
+	% ════════════════════════════════════════════════════════════════════════════════
+	%  5. НАСТРОЙКА NFS
+	% ════════════════════════════════════════════════════════════════════════════════
+	\section{Настройка NFS-сервера и клиентов}
+	
+	Конфигурация NFS-сервера определяется файлом \texttt{/etc/exports}, описывающим
+	экспортируемые директории и права доступа для клиентов.
+	
+	\textbf{Конфиксистема файла \texttt{/etc/exports}:}
+	
+	\begin{lstlisting}[language=bash, caption={Файл /etc/exports}]
+		/exports/shared 172.20.0.0/24(rw,sync,no_subtree_check,fsid=0,root_squash)
+		/exports/shared 172.20.0.11(rw,sync,no_root_squash,fsid=0)
+	\end{lstlisting}
+	
+	Строка для подсети \texttt{172.20.0.0/24} включает \texttt{root\_squash} ---
+	перемаппинг привилегированных запросов в анонимного пользователя, что снижает риск
+	несанкционированного повышения привилегий. Для доверенного клиента
+	\texttt{172.20.0.11} (тестовый контейнер) \texttt{no\_root\_squash} разрешает работу
+	от root в изолированной среде.
+	
+	\textbf{Монтирование NFS через Docker Volume.}
+	Клиентские контейнеры монтируют NFS-шару напрямую через встроенный драйвер Docker
+	Volume без установки дополнительных пакетов в образ:
+	
+	\begin{lstlisting}[language=yaml, caption={Конфигурация Docker Volume для NFS}]
+		volumes:
+		nfs_shared:
+		driver: local
+		driver_opts:
+		type: nfs4
+		o: "addr=172.20.0.10,rw,sync,nfsvers=4,hard,intr"
+		device: ":/exports/shared"
+	\end{lstlisting}
+	
+	\textbf{Контроль жизнеспособности (healthcheck).}
+	Для NFS-сервера настроен healthcheck, проверяющий доступность экспорта командой
+	\texttt{showmount}:
+	
+	\begin{lstlisting}[language=yaml, caption={Healthcheck для NFS-сервера}]
+		healthcheck:
+		test: ["CMD", "showmount", "-e", "localhost"]
+		interval: 30s
+		timeout: 10s
+		retries: 5
+		start_period: 20s
+	\end{lstlisting}
+	
+	\newpage
+	
+	% ════════════════════════════════════════════════════════════════════════════════
+	%  6. БЕЗОПАСНОСТЬ
+	% ════════════════════════════════════════════════════════════════════════════════
+	\section{Системная безопасность и hardening Linux-окружения}
+	
+	Многоуровневый периметр защиты охватывает сетевой стек ОС хоста, права доступа
+	файловой системы и изоляцию контейнеров.
+	
+	\textbf{Межсетевой экран UFW.}
+	Скрипт \texttt{hardening.sh} переводит UFW в режим блокирования входящего трафика по
+	умолчанию. Открыты только строго необходимые порты:
+	
+	\begin{table}[h!]
+		\centering
+		\small
+		\begin{tabularx}{\textwidth}{|l|l|X|}
+			\hline
+			\textbf{Порт / Протокол} & \textbf{Назначение} & \textbf{Ограничение} \\
+			\hline
+			22/TCP & SSH --- удалённое администрирование & Только admin-IP \\
+			\hline
+			2049/TCP & NFS --- внутри storage-net & Подсеть 172.20.0.0/24 \\
+			\hline
+			3000/TCP & Grafana --- веб-интерфейс & localhost / admin-сеть \\
+			\hline
+			9090/TCP & Prometheus --- метрики & Только localhost \\
+			\hline
+		\end{tabularx}
+		\caption{Правила межсетевого экрана UFW}
+	\end{table}
+	
+	\textbf{Принцип наименьших привилегий в контейнерах:}
+	
+	\begin{itemize}
+		\item Все контейнеры, кроме \texttt{nfs-server}, запускаются от непривилегированного
+		пользователя (\texttt{USER appuser});
+		\item \texttt{nfs-server} требует \texttt{privileged: true} для работы с ядерными
+		модулями NFS --- это задокументированное исключение;
+		\item \texttt{cap\_drop: [ALL]} применяется ко всем клиентским контейнерам;
+		\item Корневая ФС клиентов монтируется в режиме \texttt{read\_only: true}.
+	\end{itemize}
+	
+	\newpage
+	
+	% ════════════════════════════════════════════════════════════════════════════════
+	%  7. ТЕСТИРОВАНИЕ, РЕЗЕРВНОЕ КОПИРОВАНИЕ И CI/CD
+	% ════════════════════════════════════════════════════════════════════════════════
+	\section{Тестирование, резервное копирование и CI/CD}
+	
+	\textbf{Стратегия интеграционного тестирования.}
+	Валидация развёрнутого стенда осуществляется скриптом \texttt{test\_nfs.sh}, который
+	проверяет четыре уровня работоспособности:
+	
+	\begin{enumerate}
+		\item \textbf{Сетевая доступность} --- опрашивает экспортируемые директории NFS-сервера
+		командой \texttt{showmount -e nfs-server} с таймаутом 60 секунд.
+		\item \textbf{Монтирование контейнеров} --- проверяет, что NFS-шара примонтирована в
+		каждом клиентском контейнере командой \texttt{df -h | grep nfs}.
+		\item \textbf{Совместный доступ} --- записывает файл из \texttt{nfs-client-1} и читает
+		его из \texttt{nfs-client-2}, проверяя идентичность содержимого.
+		\item \textbf{HA-тест} --- принудительно останавливает \texttt{nfs-server}, ожидает
+		перезапуска и проверяет восстановление монтирования.
+	\end{enumerate}
+	
+	\textbf{Резервное копирование.}
+	Скрипт \texttt{backup.sh} реализует «горячее» резервное копирование содержимого
+	NFS-экспорта без остановки сервиса. Применяется утилита \texttt{rsync} с флагами
+	\texttt{--archive --checksum}, обеспечивающими инкрементальное копирование только
+	изменённых файлов. Ротация архивов удаляет копии старше 7 дней:
+	
+	\begin{lstlisting}[language=bash, caption={Ротация архивов в backup.sh}]
+		find "${BACKUP_DIR}" -type f -name "*.tar.gz" -mtime +7 -exec rm {} \;
+	\end{lstlisting}
+	
+	\textbf{Конвейер CI/CD (GitHub Actions).}
+	Проект интегрирован с облачным конвейером GitHub Actions. Пайплайн
+	\texttt{pr-validation.yml} запускается автоматически при открытии Pull Request и
+	включает следующие этапы:
+	
+	\begin{itemize}
+		\item \textbf{yamllint} --- проверка синтаксиса всех YAML-файлов проекта;
+		\item \textbf{ShellCheck} --- аудит bash-скриптов на логические ошибки и соответствие
+		POSIX;
+		\item \textbf{Hadolint} --- проверка Dockerfile на оптимизацию слоёв сборки;
+		\item \textbf{Динамические тесты} --- развёртывание стенда в эфемерном
+		Ubuntu-раннере и запуск \texttt{test\_nfs.sh}.
+	\end{itemize}
+	
+	Слияние кода в ветку \texttt{main} блокируется до успешного прохождения всех этапов
+	конвейера.
+	
+	\newpage
+	
+	% ════════════════════════════════════════════════════════════════════════════════
+	%  ЗАКЛЮЧЕНИЕ
+	% ════════════════════════════════════════════════════════════════════════════════
+	\section*{Заключение}
+	\addcontentsline{toc}{section}{Заключение}
+	
+	В ходе выполнения данного курсового проекта был успешно спроектирован, развёрнут и
+	защищён отказоустойчивый сервис сетевого файлового хранилища на базе протокола NFS в
+	контейнеризированной среде под управлением ОС Linux.
+	
+	Применение методологии Infrastructure as Code и инструментов Docker Compose позволило
+	полностью автоматизировать все этапы: подготовку окружения, настройку экспортов,
+	монтирование в клиентских контейнерах и проведение интеграционных тестов.
+	
+	Реализованная многоуровневая система безопасности --- изоляция сети
+	\texttt{storage-net}, правила UFW по принципу «запрещено всё», принцип наименьших
+	привилегий в контейнерах --- обеспечила высокий уровень защищённости хранимых данных от
+	несанкционированного доступа.
+	
+	Развёрнутый стек мониторинга Prometheus + Grafana с кастомными дашбордами предоставляет
+	полную наблюдаемость (observability) работы NFS-сервера в реальном времени. Интеграция
+	с CI/CD пайплайном GitHub Actions гарантирует стабильность инфраструктуры на
+	протяжении всего жизненного цикла её эксплуатации.
+	
+	\begin{table}[h!]
+		\centering
+		\small
+		\begin{tabular}{|p{11cm}|c|}
+			\hline
+			\textbf{Результат} & \textbf{Статус} \\
+			\hline
+			Развёртывание NFS Replica Set в Docker Compose & $\checkmark$ Выполнено \\
+			\hline
+			Автоматизация bootstrap.sh и Makefile & $\checkmark$ Выполнено \\
+			\hline
+			Многоуровневый hardening (UFW, cap\_drop, read\_only) & $\checkmark$ Выполнено \\
+			\hline
+			Интеграционные тесты и HA-тестирование & $\checkmark$ Выполнено \\
+			\hline
+			Мониторинг Prometheus + Grafana & $\checkmark$ Выполнено \\
+			\hline
+			CI/CD пайплайн GitHub Actions & $\checkmark$ Выполнено \\
+			\hline
+		\end{tabular}
+		\caption{Итоговые результаты проекта}
+	\end{table}
+	
+\end{document}
