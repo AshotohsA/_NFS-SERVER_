@@ -1,0 +1,580 @@
+\documentclass[aspectratio=169,14pt]{beamer}
+
+% ─── Кодировка и язык ────────────────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[russian]{babel}
+
+% ─── Тема оформления ─────────────────────────────────────────────────────────
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+
+% Цветовая палитра (Ocean Gradient)
+\definecolor{primary}{HTML}{065A82}
+\definecolor{secondary}{HTML}{1C7293}
+\definecolor{accent}{HTML}{02C39A}
+\definecolor{lightbg}{HTML}{EAF4F8}
+\definecolor{codebg}{HTML}{F0F4F8}
+
+\setbeamercolor{palette primary}{bg=primary,fg=white}
+\setbeamercolor{palette secondary}{bg=secondary,fg=white}
+\setbeamercolor{palette tertiary}{bg=primary!80,fg=white}
+\setbeamercolor{palette quaternary}{bg=primary,fg=white}
+\setbeamercolor{structure}{fg=primary}
+\setbeamercolor{block title}{bg=primary,fg=white}
+\setbeamercolor{block body}{bg=lightbg}
+\setbeamercolor{alerted text}{fg=accent!70!black}
+\setbeamercolor{frametitle}{bg=primary,fg=white}
+
+\setbeamerfont{title}{size=\large,series=\bfseries}
+\setbeamerfont{frametitle}{size=\normalsize,series=\bfseries}
+
+% Убираем навигационные символы
+\setbeamertemplate{navigation symbols}{}
+
+% Нумерация слайдов в колонтитуле
+\setbeamertemplate{footline}{%
+	\leavevmode%
+	\hbox{%
+		\begin{beamercolorbox}[wd=.45\paperwidth,ht=2.25ex,dp=1ex,left,leftskip=1em]{palette primary}%
+			\usebeamerfont{author in head/foot}ЮФУ · Физический факультет · 2026
+		\end{beamercolorbox}%
+		\begin{beamercolorbox}[wd=.40\paperwidth,ht=2.25ex,dp=1ex,center]{palette secondary}%
+			\usebeamerfont{title in head/foot}Администрирование ОС Linux
+		\end{beamercolorbox}%
+		\begin{beamercolorbox}[wd=.15\paperwidth,ht=2.25ex,dp=1ex,right,rightskip=1em]{palette primary}%
+			\usebeamerfont{date in head/foot}\insertframenumber{} / \inserttotalframenumber
+	\end{beamercolorbox}}%
+}
+
+% ─── Листинги кода ───────────────────────────────────────────────────────────
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Явное определение синтаксиса YAML для пакета listings
+\lstdefinelanguage{yaml}{
+	keywords={true,false,null,y,n,services,volumes,networks,driver,driver_opts,image,privileged,environment,networks,healthcheck,test,interval,timeout,retries,depends_on,condition},
+	keywordstyle=\color{primary}\bfseries,
+	basicstyle=\ttfamily\scriptsize,
+	sensitive=false,
+	comment=[l]{\#},
+	commentstyle=\color{accent!70!black}\ttfamily,
+	stringstyle=\color{secondary}\ttfamily,
+	moredelim=[l][\color{primary}]{\:},
+	morestring=[b]',
+	morestring=[b]"
+}
+
+\lstset{
+	backgroundcolor=\color{codebg},
+	basicstyle=\ttfamily\scriptsize,
+	breaklines=true,
+	frame=single,
+	rulecolor=\color{primary!30},
+	numbers=none,
+	showstringspaces=false,
+	tabsize=2,
+	extendedchars=true,
+	inputencoding=utf8,
+	literate=
+	{а}{{\cyrа}}1 {б}{{\cyrb}}1 {в}{{\cyrv}}1 {г}{{\cyrg}}1 {д}{{\cyrd}}1
+	{е}{{\cyre}}1 {ё}{{\cyryo}}1 {ж}{{\cyrzh}}1 {з}{{\cyrz}}1 {и}{{\cyri}}1
+	{й}{{\cyrishrt}}1 {к}{{\cyrk}}1 {л}{{\cyrl}}1 {м}{{\cyrm}}1 {н}{{\cyrn}}1
+	{о}{{\cyro}}1 {п}{{\cyrp}}1 {р}{{\cyrr}}1 {с}{{\cyrs}}1 {т}{{\cyrt}}1
+	{у}{{\cyru}}1 {ф}{{\cyrf}}1 {х}{{\cyrh}}1 {ц}{{\cyrc}}1 {ч}{{\cyrch}}1
+	{ш}{{\cyrsh}}1 {щ}{{\cyrshch}}1 {ъ}{{\cyrhrdsn}}1 {ы}{{\cyrery}}1
+	{ь}{{\cyrsftsn}}1 {э}{{\cyrerev}}1 {ю}{{\cyryu}}1 {я}{{\cyrya}}1
+	{А}{{\CYRA}}1 {Б}{{\CYRB}}1 {В}{{\CYRV}}1 {Г}{{\CYRG}}1 {Д}{{\CYRD}}1
+	{Е}{{\CYRE}}1 {Ё}{{\CYRYO}}1 {Ж}{{\CYRZH}}1 {З}{{\CYRZ}}1 {И}{{\CYRI}}1
+	{Й}{{\CYRISHRT}}1 {К}{{\CYRK}}1 {Л}{{\CYRL}}1 {М}{{\CYRM}}1 {Н}{{\CYRN}}1
+	{О}{{\CYRO}}1 {П}{{\CYRP}}1 {Р}{{\CYRR}}1 {С}{{\CYRS}}1 {Т}{{\CYRT}}1
+	{У}{{\CYRU}}1 {Ф}{{\CYRF}}1 {Х}{{\CYRH}}1 {Ц}{{\CYRC}}1 {Ч}{{\CYRCH}}1
+	{Ш}{{\CYRSH}}1 {Щ}{{\CYRSHCH}}1 {Ъ}{{\CYRHRDSN}}1 {Ы}{{\CYRERY}}1
+	{Ь}{{\CYRSFTSN}}1 {Э}{{\CYREREV}}1 {Ю}{{\CYRYU}}1 {Я}{{\CYRYA}}1
+}
+
+% ─── Доп. пакеты ─────────────────────────────────────────────────────────────
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric,arrows.meta,fit,positioning,backgrounds}
+
+% Безопасные строки авторов для PDF-закладок (убирает предупреждения)
+\newcommand{\AuthorG}{\texorpdfstring{Григорян А.\,А.}{Григорян А.А.}}
+\newcommand{\AuthorK}{\texorpdfstring{Карлашов А.\,В.}{Карлашов А.В.}}
+\newcommand{\AuthorKr}{\texorpdfstring{Кроливец И.\,С.}{Кроливец И.С.}}
+
+% ════════════════════════════════════════════════════════════════════════════════
+%  МЕТАДАННЫЕ
+% ════════════════════════════════════════════════════════════════════════════════
+\title{Развёртывание и настройка NFS-сервера\\для сетевого хранения данных}
+\subtitle{Курсовой проект по курсу «Администрирование Unix-подобных систем»}
+\author{\AuthorG \and \AuthorK \and \AuthorKr}
+\institute{ЮФУ · Физический факультет}
+\date{Ростов-на-Дону, 2026}
+
+% ════════════════════════════════════════════════════════════════════════════════
+\begin{document}
+	
+	% ─── Титульный слайд ─────────────────────────────────────────────────────────
+	\begin{frame}
+		\titlepage
+	\end{frame}
+	
+	% ─── Оглавление ──────────────────────────────────────────────────────────────
+	\begin{frame}{Содержание}
+		\tableofcontents[hideallsubsections]
+	\end{frame}
+	
+	% ════════════════════════════════════════════════════════════════════════════════
+	\section{Актуальность и постановка задачи}
+	% ════════════════════════════════════════════════════════════════════════════════
+	
+	\begin{frame}{Актуальность проекта и проблематика}
+		\begin{columns}[T]
+			\begin{column}{0.6\textwidth}
+				\begin{block}{Ключевые проблемы}
+					\begin{itemize}
+						\item \textbf{Изолированное хранение данных}~— каждый контейнер хранит данные отдельно, что порождает дублирование
+						\item \textbf{Масштабируемость}~— требуется единая точка хранения для всех рабочих узлов
+						\item \textbf{Configuration drift}~— ручная настройка приводит к расхождению конфигураций
+					\end{itemize}
+				\end{block}
+			\end{column}
+			\begin{column}{0.38\textwidth}
+				\begin{alertblock}{Решение}
+					\centering
+					\textbf{NFSv4}\\[2pt]
+					Единый порт 2049/TCP\\
+					Kerberos-ready\\[6pt]
+					\textbf{IaC подход}\\[2pt]
+					Docker Compose\\
+					bootstrap.sh\\
+					CI/CD пайплайн
+				\end{alertblock}
+			\end{column}
+		\end{columns}
+	\end{frame}
+	
+	\begin{frame}{Цели и задачи работы}
+		\begin{block}{\centering Цель работы}
+			\centering\small
+			Проектирование, развёртывание и защита NFS-сервера сетевого хранения данных в контейнеризированной среде под управлением ОС Linux
+		\end{block}
+		\vspace{0.2em}
+		\textbf{Задачи для достижения цели:}
+		\begin{enumerate}\small
+			\item Развёртывание NFS-сервера в Docker с персистентным томом данных
+			\item Подключение нескольких клиентских контейнеров через Docker Volume (\texttt{type: nfs4})
+			\item Реализация сетевой изоляции (\texttt{storage-net}) и hardening (UFW, \texttt{cap\_drop})
+			\item Написание скриптов тестирования (\texttt{test\_nfs.sh}) и бэкапа
+			\item Настройка CI/CD пайплайна и мониторинга Prometheus + Grafana
+		\end{enumerate}
+	\end{frame}
+	
+	% ════════════════════════════════════════════════════════════════════════════════
+	\section{Распределение ролей}
+	% ════════════════════════════════════════════════════════════════════════════════
+	
+	\begin{frame}{Распределение ролей и индивидуальный вклад}
+		\small
+		\begin{columns}[T]
+			\begin{column}{0.32\textwidth}
+				\begin{block}{Григорян Ашот\\{\footnotesize Инженер по автоматизации}}
+					\begin{itemize}\footnotesize
+						\item Структура репозитория, Git
+						\item Docker Compose манифест
+						\item \texttt{bootstrap.sh}~— хост
+						\item Dockerfile (non-root)
+						\item Makefile: \texttt{up/down/test}
+					\end{itemize}
+				\end{block}
+			\end{column}
+			\begin{column}{0.32\textwidth}
+				\begin{block}{Карлашов Андрей\\{\footnotesize Системный администратор / SRE}}
+					\begin{itemize}\footnotesize
+						\item Настройка \texttt{/etc/exports}
+						\item NFSv4: fsid=0, порт 2049
+						\item Клиентские тома (\texttt{type: nfs4})
+						\item healthcheck: showmount
+						\item HA-тест: failover
+					\end{itemize}
+				\end{block}
+			\end{column}
+			\begin{column}{0.32\textwidth}
+				\begin{block}{Кроливец Иван\\{\footnotesize Инженер по безопасности}}
+					\begin{itemize}\footnotesize
+						\item \texttt{hardening.sh}: UFW
+						\item Изоляция \texttt{storage-net}
+						\item Prometheus + Grafana
+						\item Дашборды: I/O, метрики
+						\item CI/CD: GitHub Actions
+					\end{itemize}
+				\end{block}
+			\end{column}
+		\end{columns}
+	\end{frame}
+	
+	% ════════════════════════════════════════════════════════════════════════════════
+	\section{Теоретические основы}
+	% ════════════════════════════════════════════════════════════════════════════════
+	
+	\begin{frame}{Теоретические основы: протокол NFS}
+		\begin{columns}[T]
+			\begin{column}{0.55\textwidth}
+				\textbf{Ключевые свойства NFSv4:}
+				\begin{itemize}\small
+					\item Единственный порт \textbf{2049/TCP}~— упрощает правила брандмауэра
+					\item Сессионная модель со стейтом
+					\item Kerberos / RPCSEC\_GSS
+					\item pNFS (v4.1)~— параллельный доступ
+				\end{itemize}
+				\vspace{0.3em}
+				\textbf{Опции \texttt{/etc/exports}:}\\[2pt]
+				\footnotesize\texttt{rw/ro}, \texttt{sync/async}, \texttt{root\_squash}, \texttt{no\_subtree\_check}, \texttt{fsid=0}
+			\end{column}
+			\begin{column}{0.43\textwidth}
+				\begin{block}{Сравнение альтернатив}
+					\small
+					\begin{tabular}{ll}
+						\toprule
+						\textbf{Технология} & \textbf{Вывод} \\
+						\midrule
+						NFS   & \textcolor{accent!70!black}{\textbf{Оптимален}} \\
+						Samba & Избыточен \\
+						GlusterFS & Избыточен \\
+						iSCSI & Другой класс \\
+						\bottomrule
+					\end{tabular}
+				\end{block}
+			\end{column}
+		\end{columns}
+	\end{frame}
+	
+	% ════════════════════════════════════════════════════════════════════════════════
+	\section{Архитектура и сетевая инфраструктура}
+	% ════════════════════════════════════════════════════════════════════════════════
+	
+	\begin{frame}{Архитектура распределённого кластера}
+		\centering
+		\begin{tikzpicture}[
+			node distance=1.0cm and 1.4cm,
+			box/.style={draw=primary,fill=lightbg,rounded corners=4pt,
+				minimum width=2.4cm,minimum height=0.85cm,
+				font= \small\bfseries,align=center,text=primary},
+			net/.style={draw=secondary,fill=secondary!10,rounded corners=6pt,
+				minimum width=9.5cm,minimum height=1.7cm,
+				font=\footnotesize\itshape,align=left},
+			arr/.style={-{Stealth[length=5pt]},thick,color=primary}
+			]
+			% storage-net background
+			\begin{scope}
+				\node[net,label={[font=\footnotesize\bfseries,color=secondary]above:storage-net (172.20.0.0/24)}]
+				(snet) at (0,0) {};
+			\end{scope}
+			
+			% nodes inside storage-net
+			\node[box] (srv) at (-3.2,0)  {nfs-server\\{\tiny 172.20.0.10}};
+			\node[box] (c1)  at (0,0)     {nfs-client-1\\{\tiny 172.20.0.11}};
+			\node[box] (c2)  at (3.2,0)   {nfs-client-2\\{\tiny 172.20.0.12}};
+			
+			% monitoring
+			\node[box,fill=accent!15,draw=accent!60!black] (mon) at (0,-2.0)
+			{monitoring\\{\tiny Prometheus + Grafana}};
+			
+			% arrows
+			\draw[arr] (srv) -- (c1);
+			\draw[arr] (srv) -- (c2);
+			\draw[arr,dashed,color=secondary] (srv) -- (mon) node[midway,right,font=\tiny]{monitoring-net};
+			
+			% volume label
+			\node[font=\tiny,color=primary,below=2pt of srv] {nfs\_data (persistent)};
+		\end{tikzpicture}
+		
+		\vspace{0.2em}
+		\begin{columns}[T]
+			\begin{column}{0.48\textwidth}
+				\centering\footnotesize\textbf{storage-net}~— NFS-трафик изолирован, порт 2049 закрыт снаружи
+			\end{column}
+			\begin{column}{0.48\textwidth}
+				\centering\footnotesize\textbf{monitoring-net}~— Grafana на порту 3000 с HTTP-auth
+			\end{column}
+		\end{columns}
+	\end{frame}
+	
+	\begin{frame}[fragile]{Сетевая инфраструктура и изоляция}
+		\begin{columns}[T]
+			\begin{column}{0.55\textwidth}
+				\begin{block}{Virtual Network \texttt{storage-net}}
+					\begin{itemize}\footnotesize
+						\item \texttt{nfs-server}: fixed IP \texttt{172.20.0.10}
+						\item Клиенты: \texttt{.11} и \texttt{.12}
+						\item Порт 2049 закрыт из внешнего мира
+					\end{itemize}
+				\end{block}
+				\begin{block}{Мониторинг периметра}
+					\begin{itemize}\footnotesize
+						\item Grafana: порт 3000, HTTP-auth
+						\item Prometheus: доступ только через localhost
+					\end{itemize}
+				\end{block}
+			\end{column}
+			\begin{column}{0.43\textwidth}
+				\begin{alertblock}{Правила UFW}
+					\scriptsize
+					\begin{verbatim}
+						ufw default deny incoming
+						ufw allow 22/tcp
+						ufw allow from \
+						172.20.0.0/24 \
+						to any port 2049
+					\end{verbatim}
+				\end{alertblock}
+				\vspace{0.1em}
+				\centering\footnotesize\textcolor{accent!70!black}{\textbf{Защита от утечек трафика}}\\
+				NFS локализован внутри \texttt{storage-net}
+			\end{column}
+		\end{columns}
+	\end{frame}
+	
+	% ════════════════════════════════════════════════════════════════════════════════
+	\section{Автоматизация (IaC)}
+	% ════════════════════════════════════════════════════════════════════════════════
+	
+	\begin{frame}[fragile]{Автоматизация развёртывания: Docker Compose}
+		\begin{lstlisting}[language=yaml,basicstyle=\ttfamily\tiny]
+			services:
+			nfs-server:
+			image: erichough/nfs-server:latest
+			privileged: true
+			environment:
+			NFS_EXPORT_0: '/exports/shared *(rw,sync,no_subtree_check,fsid=0)'
+			volumes:
+			- nfs_data:/exports/shared
+			networks:
+			storage-net:
+			ipv4_address: 172.20.0.10
+			healthcheck:
+			test: ["CMD", "showmount", "-e", "localhost"]
+			interval: 30s  timeout: 10s  retries: 5
+			
+			nfs-client-1:
+			image: alpine:3.19
+			depends_on:
+			nfs-server:
+			condition: service_healthy
+			volumes:
+			- nfs_shared:/mnt/shared
+			networks: [storage-net]
+		\end{lstlisting}
+	\end{frame}
+	
+	\begin{frame}[fragile]{Монтирование NFS через Docker Volume (NFSv4)}
+		\begin{lstlisting}[language=yaml,basicstyle=\ttfamily\tiny]
+			volumes:
+			nfs_shared:
+			driver: local
+			driver_opts:
+			type: nfs4
+			o: "addr=172.20.0.10,rw,sync,nfsvers=4,hard,intr"
+			device: ":/exports/shared"
+			nfs_data:
+			driver: local
+			networks:
+			storage-net:
+			driver: bridge
+			ipam:
+			config:
+			- subnet: 172.20.0.0/24
+			monitoring-net:
+			driver: bridge
+		\end{lstlisting}
+	\end{frame}
+	
+	\begin{frame}[fragile]{Первичная подготовка среды (\texttt{bootstrap.sh})}
+		\begin{lstlisting}[language=bash,basicstyle=\ttfamily\tiny]
+			#!/bin/bash
+			# @file bootstrap.sh  @brief Host initialization
+			set -euo pipefail
+			
+			EXPORT_DIR="${EXPORT_DIR:-/opt/nfs/shared}"
+			BACKUP_DIR="${BACKUP_DIR:-/opt/nfs/backups}"
+			
+			# Initialization of target mount directories
+			for dir in "${EXPORT_DIR}" "${BACKUP_DIR}"; do
+			if [[ ! -d "${dir}" ]]; then
+			mkdir -p "${dir}"
+			chown nobody:nogroup "${dir}"
+			chmod 777 "${dir}"
+			echo "LOG: Created ${dir}"
+			fi
+			done
+			
+			# Environment config verification
+			if [[ ! -f ".env" ]]; then
+			cp .env.example .env
+			echo "WARN: .env generated!"
+			fi
+		\end{lstlisting}
+	\end{frame}
+	
+	% ════════════════════════════════════════════════════════════════════════════════
+	\section{Безопасность}
+	% ════════════════════════════════════════════════════════════════════════════════
+	
+	\begin{frame}{Обеспечение безопасности (Hardening)}
+		\begin{columns}[T]
+			\begin{column}{0.48\textwidth}
+				\begin{block}{Уровень хоста (\texttt{hardening.sh})}
+					\begin{itemize}
+						\item UFW: \texttt{default deny incoming}
+						\item 22/TCP~— SSH, только доверенные IP
+						\item 2049/TCP~— строго для \texttt{172.20.0.0/24}
+					\end{itemize}
+				\end{block}
+				\begin{block}{Уровень NFS}
+					\footnotesize\texttt{root\_squash}: привилегированные запросы маппятся в \texttt{nobody} (UID 65534)
+				\end{block}
+			\end{column}
+			\begin{column}{0.48\textwidth}
+				\begin{block}{Уровень контейнеров}
+					\begin{itemize}\footnotesize
+						\item \texttt{cap\_drop: [ALL]} у клиентов
+						\item \texttt{read\_only: true} для корня ФС
+						\item Запуск процессов от \texttt{USER appuser}
+						\item \texttt{privileged: true} для сервера~— необходимое исключение ядерного уровня
+					\end{itemize}
+				\end{block}
+			\end{column}
+		\end{columns}
+	\end{frame}
+	
+	% ════════════════════════════════════════════════════════════════════════════════
+	\section{Тестирование и CI/CD}
+	% ════════════════════════════════════════════════════════════════════════════════
+	
+	\begin{frame}[fragile]{Интеграционное тестирование (\texttt{test\_nfs.sh})}
+		\begin{columns}[T]
+			\begin{column}{0.56\textwidth}
+				\textbf{4 стадии автоматической валидации:}
+				\begin{enumerate}\footnotesize
+					\item \textbf{Сетевой скан}~— проверка экспорта через \texttt{showmount} (timeout 60s)
+					\item \textbf{Монтирование}~— парсинг вывода \texttt{df -h} в клиентах
+					\item \textbf{I/O валидация}~— сквозная запись из client-1 и чтение из client-2
+					\item \textbf{HA-сценарий}~— рестарт сервера и проверка восстановления дескрипторов файлов
+				\end{enumerate}
+			\end{column}
+			\begin{column}{0.42\textwidth}
+				\begin{block}{Резервное копирование}
+					\scriptsize
+					\textbf{rsync} \texttt{--archive --checksum}\\[3pt]
+					Инкрементальный бэкап (7 суток):
+					\begin{lstlisting}[language=bash,basicstyle=\ttfamily\tiny]
+						find "${BACKUP_DIR}" -mtime +7 -exec rm {} +
+					\end{lstlisting}
+				\end{block}
+			\end{column}
+		\end{columns}
+	\end{frame}
+	
+	\begin{frame}{Конвейер CI/CD: GitHub Actions}
+		\begin{columns}[T]
+			\begin{column}{0.55\textwidth}
+				\textbf{Спецификация \texttt{pr-validation.yml}}\\
+				(Триггер: Pull Request в main):
+				\begin{enumerate}\small
+					\item \textbf{yamllint}~— валидация манифестов
+					\item \textbf{ShellCheck}~— статический анализ bash
+					\item \textbf{Hadolint}~— оптимизация Dockerfile
+					\item \textbf{Инфратест}~— запуск \texttt{test\_nfs.sh}
+				\end{enumerate}
+			\end{column}
+			\begin{column}{0.43\textwidth}
+				\begin{alertblock}{Защита веток}
+					\centering\footnotesize
+					Слияние с веткой \texttt{main} заблокировано до прохождения тестов
+				\end{alertblock}
+				\vspace{0.1em}
+				\centering\scriptsize
+				\begin{tabular}{ll}
+					\textcolor{accent!70!black}{\textbf{Анализ}} & 3 линтера \\
+					\textcolor{accent!70!black}{\textbf{Тест}} & Стенд в облаке \\
+				\end{tabular}
+			\end{column}
+		\end{columns}
+	\end{frame}
+	
+	% ════════════════════════════════════════════════════════════════════════════════
+	\section{Мониторинг}
+	% ════════════════════════════════════════════════════════════════════════════════
+	
+	\begin{frame}{Мониторинг: Prometheus + Grafana}
+		\begin{columns}[T]
+			\begin{column}{0.52\textwidth}
+				\textbf{Сбор телеметрии:}
+				\begin{itemize}\footnotesize
+					\item \texttt{node\_exporter}~— системные метрики хоста (CPU, RAM, Disk I/O)
+					\item \texttt{cAdvisor}~— производительность контейнеров
+					\item \textbf{Prometheus}~— TSDB, scrape: 15s
+				\end{itemize}
+			\end{column}
+			\begin{column}{0.46\textwidth}
+				\textbf{Grafana дашборды (IaC):}
+				\begin{itemize}\footnotesize
+					\item NFS метрики: ops/s, bytes r/w
+					\item Ресурсы: утилизация лимитов
+				\end{itemize}
+				\begin{alertblock}{Алертинг}
+					\centering\small
+					Оповещение при дауне > 30с
+				\end{alertblock}
+			\end{column}
+		\end{columns}
+	\end{frame}
+	
+	% ════════════════════════════════════════════════════════════════════════════════
+	\section{Итоги}
+	% ════════════════════════════════════════════════════════════════════════════════
+	
+	\begin{frame}{Итоги проекта}
+		\begin{center}
+			\small
+			\begin{tabular}{lc}
+				\toprule
+				\textbf{Результат} & \textbf{Статус} \\
+				\midrule
+				Развёртывание NFS Replica Set в Docker Compose & \textcolor{accent!70!black}{\checkmark\ Выполнено} \\
+				Автоматизация: \texttt{bootstrap.sh} и Makefile & \textcolor{accent!70!black}{\checkmark\ Выполнено} \\
+				Многоуровневый hardening (UFW, \texttt{cap\_drop}, RO) & \textcolor{accent!70!black}{\checkmark\ Выполнено} \\
+				Интеграционные тесты и HA-тестирование & \textcolor{accent!70!black}{\checkmark\ Выполнено} \\
+				Мониторинг Prometheus + Grafana & \textcolor{accent!70!black}{\checkmark\ Выполнено} \\
+				CI/CD пайплайн GitHub Actions & \textcolor{accent!70!black}{\checkmark\ Выполнено} \\
+				\bottomrule
+			\end{tabular}
+		\end{center}
+		\vspace{-0.2em}
+		\begin{block}{\centering Ключевые достижения}
+			\centering\footnotesize
+			Концепция \textbf{IaC} полностью исключила дрейф конфигураций \quad\textbullet\quad Сетевая безопасность.\\
+			Наблюдаемость через Prometheus/Grafana \quad\textbullet\quad Контроль стабильности через CI/CD.
+		\end{block}
+	\end{frame}
+	
+	% ─── Финальный слайд ─────────────────────────────────────────────────────────
+	\begin{frame}
+		\begin{center}
+			\vspace{0.5em}
+			{\Large\bfseries\color{primary} Спасибо за внимание!}\\[1.0em]
+			{\normalsize Григорян А.\,А. \quad Карлашов А.\,В. \quad Кроливец И.\,С.}\\[0.3em]
+			{\small ЮФУ · Физический факультет · 2026}\\[0.8em]
+			\begin{block}{\centering Тема проекта}
+				\centering\small
+				Развёртывание и настройка NFS-сервера для сетевого хранения данных
+			\end{block}
+			\vspace{0.3em}
+			{\footnotesize Проверил: Тимошенко Павел Евгеньевич}
+		\end{center}
+	\end{frame}
+	
+\end{document}
