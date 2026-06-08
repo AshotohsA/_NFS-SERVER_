@@ -16,8 +16,8 @@ services:
       timeout: 5s
       retries: 3
 
-  custom-service:
-    build: ./docker/custom-service
+custom-service:
+    build: ./docker/main-service
     container_name: custom-service
     privileged: true
     pid: "host"
