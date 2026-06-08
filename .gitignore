@@ -37,3 +37,5 @@ __pycache__/
 # Архивы
 *.zip
 *.tar.gz
+.env
+.env.local
